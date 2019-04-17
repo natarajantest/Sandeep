@@ -1,0 +1,51 @@
+package package1;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
+
+public class Test {
+
+	public static void main(String[] args) throws InterruptedException {
+		
+		WebDriver driver = new FirefoxDriver();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get("http://demo.openemr.io/d/openemr");
+		
+		driver.findElement(By.id("authUser")).sendKeys("admin");
+		driver.findElement(By.id("clearPass")).sendKeys("pass");
+		driver.findElement(By.xpath("//button[@class='btn btn-default btn-lg']")).click();
+		
+		Actions act=new Actions(driver);
+		act.moveToElement(driver.findElement(By.xpath("(//div[@class='menuSection'])[1]"))).build().perform();
+		driver.findElement(By.xpath("//div[text()='New/Search']")).click();
+		
+		driver.switchTo().frame(driver.findElement(By.xpath("//iframe[@name='pat']")));
+		driver.findElement(By.xpath("//input[@id='form_fname']")).sendKeys("Sandeep");
+		driver.findElement(By.id("form_lname")).sendKeys("Singh");
+		
+		//driver.findElement(By.xpath("//div[text()='17']")).click();
+		driver.findElement(By.id("form_DOB")).sendKeys("form_DOB");
+		
+		Select select = new	Select(driver.findElement(By.id("form_sex")));
+		select.selectByValue("Male");
+						
+		driver.findElement(By.xpath("//button[@id='create']")).click();
+		driver.switchTo().defaultContent();
+		   
+		driver.switchTo().frame(driver.findElement(By.xpath("//iframe[@class='embed-responsive-item modalIframe']")));
+		driver.findElement(By.xpath("//input[@value='Confirm Create New Patient']")).click();
+		Thread.sleep(30000);
+	    driver.switchTo().alert().accept();
+	    driver.findElement(By.xpath("//div[@class='closeDlgIframe']")).click();
+	    act.moveToElement(driver.findElement(By.xpath("//span[text()='Billy']"))).build().perform();
+	    driver.findElement(By.xpath("//ul//li[text()='Logout']")).click();
+	    
+	}
+
+}
